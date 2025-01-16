@@ -36,6 +36,10 @@ function hsvbox:onmousepressed(x,y,btn)
 		self.selected = true
 		love.mouse.setVisible(false)
 		self.cursor.x, self.cursor.y = x, y
+
+        local s = (self.cursor.x - self.bound.x) / self.bound.w
+		local v = 1 - (self.cursor.y - self.bound.y) / self.bound.h
+        self.onupdatehsv({h=0, s=s, v=v})
 	end
 end
 
