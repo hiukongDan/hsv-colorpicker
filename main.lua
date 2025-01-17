@@ -6,6 +6,7 @@ local hsvbox = require("hsvbox")
 local colorbox = require("colorbox")
 local observer = require("observer")
 local infobox = require("infobox")
+local palettelist = require("palettelist")
 
 local insert = table.insert
 
@@ -60,6 +61,12 @@ function love.load()
 	g_huebox.drawcallback = function()
 		huebox:draw()
 	end
+	g_observer:subscribe("hue",
+		function(h)
+			local x, y = g_huebox.bound.x, g_huebox.bound.x + g_huebox.bound.w
+			g_huebox.cursor.x = helper.remap(h, 0, 1, x, y)
+		end
+	)
 	
 
 
@@ -81,8 +88,6 @@ function love.load()
 			g_saturationbox.cursor.x = helper.remap(s, 0, 1, x, y)
 		end
 	)
-
-
 
 
 	-- value
@@ -138,6 +143,20 @@ function love.load()
 	insert(g_infolist, g_inforgb255)
 	
 	
+	-- palettelist
+	g_palettelist = palettelist:new(19, {x=220, y=10, w=20, h=560})
+	g_palettelist.onselectslot =
+		function()
+			g_hsv.h,g_hsv.s, g_hsv.v = g_palettelist:currentHSV()
+			g_observer:fire("hue", g_hsv.h)
+			g_observer:fire("saturation", g_hsv.s)
+			g_observer:fire("value", g_hsv.v)
+		end
+	local palettecallback = function(v) g_palettelist:onhsvchange(g_hsv) end
+	g_observer:subscribe("hue", palettecallback)
+	g_observer:subscribe("saturation", palettecallback)
+	g_observer:subscribe("value", palettecallback)
+
 end
 
 
@@ -176,6 +195,9 @@ function love.draw()
 	for i = 1, #g_infolist do
 		g_infolist[i]:draw()
 	end
+
+	-- palette list
+	g_palettelist:draw()
 end
 
 
@@ -188,6 +210,8 @@ function love.mousepressed(x, y, btn)
 	for i = 1, #g_infolist do
 		g_infolist[i]:onmousepressed(x,y,btn)
 	end
+
+	g_palettelist:onmousepressed(x,y,btn)
 
 end
 

@@ -48,6 +48,7 @@ function hsvbox:onmousereleased(x,y,btn)
     if btn == 1 and self.selected then
 		love.mouse.setVisible(true)
 		self.selected = false
+        love.mouse.setPosition(self.cursor.x, self.cursor.y)
 	end
 end
 
