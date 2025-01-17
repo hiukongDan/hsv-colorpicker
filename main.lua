@@ -144,7 +144,7 @@ function love.load()
 	
 	
 	-- palettelist
-	g_palettelist = palettelist:new(19, {x=220, y=10, w=20, h=560})
+	g_palettelist = palettelist:new(8, {x=220, y=10, w=60, h=560})
 	g_palettelist.onselectslot =
 		function()
 			g_hsv.h,g_hsv.s, g_hsv.v = g_palettelist:currentHSV()
